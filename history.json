@@ -1,0 +1,158 @@
+[
+  {
+    "source": "Manual entry",
+    "prediction": "BENIGN",
+    "confidence": 0.9333333333333332,
+    "models": [
+      {
+        "model": "Random Forest",
+        "prediction": "BENIGN",
+        "confidence": 0.8
+      },
+      {
+        "model": "Decision Tree",
+        "prediction": "BENIGN",
+        "confidence": 1.0
+      },
+      {
+        "model": "XGBoost",
+        "prediction": "BENIGN",
+        "confidence": 1.0
+      }
+    ],
+    "is_attack": false,
+    "explanation": {
+      "method": "SHAP",
+      "summary": "For this BENIGN prediction, the strongest features supporting the selected class were min_seg_size_forward, Init_Win_bytes_backward, Init_Win_bytes_forward, Bwd Packet Length Min. Positive SHAP values push the selected model output toward this class and negative values push away from it. These are model contributions, not proof of causation.",
+      "top_features": [
+        {
+          "feature": "min_seg_size_forward",
+          "value": 0.0,
+          "importance": 0.056256651297075154,
+          "impact": 0.056256651297075154
+        },
+        {
+          "feature": "Init_Win_bytes_backward",
+          "value": 8192.0,
+          "importance": 0.03613557165528985,
+          "impact": 0.03613557165528985
+        },
+        {
+          "feature": "Init_Win_bytes_forward",
+          "value": 8192.0,
+          "importance": 0.03463083413310045,
+          "impact": 0.03463083413310045
+        },
+        {
+          "feature": "Bwd Packet Length Min",
+          "value": 40.0,
+          "importance": 0.03356333788590985,
+          "impact": 0.03356333788590985
+        },
+        {
+          "feature": "PSH Flag Count",
+          "value": 0.0,
+          "importance": 0.03142167600597777,
+          "impact": 0.03142167600597777
+        },
+        {
+          "feature": "Destination Port",
+          "value": 80.0,
+          "importance": 0.027226408131071578,
+          "impact": 0.027226408131071578
+        },
+        {
+          "feature": "Fwd Header Length.1",
+          "value": 0.0,
+          "importance": 0.026189431490130685,
+          "impact": 0.026189431490130685
+        },
+        {
+          "feature": "Bwd Packet Length Mean",
+          "value": 300.0,
+          "importance": 0.026160625902742957,
+          "impact": 0.026160625902742957
+        }
+      ]
+    },
+    "timestamp": "2026-10-16 08:54:48"
+  },
+  {
+    "source": "Manual entry",
+    "prediction": "DoS Hulk",
+    "confidence": 1.0,
+    "models": [
+      {
+        "model": "Random Forest",
+        "prediction": "DoS Hulk",
+        "confidence": 1.0
+      },
+      {
+        "model": "Decision Tree",
+        "prediction": "DoS Hulk",
+        "confidence": 1.0
+      },
+      {
+        "model": "XGBoost",
+        "prediction": "DoS Hulk",
+        "confidence": 1.0
+      }
+    ],
+    "is_attack": true,
+    "explanation": {
+      "method": "SHAP",
+      "summary": "The SHAP values show which features influenced the DoS Hulk prediction. Features pushing against this class included Avg Bwd Segment Size, Packet Length Std, min_seg_size_forward. Positive SHAP values push the selected model output toward this class and negative values push away from it. These are model contributions, not proof of causation.",
+      "top_features": [
+        {
+          "feature": "Avg Bwd Segment Size",
+          "value": 1932.5,
+          "importance": 0.02578449680043884,
+          "impact": -0.02578449680043884
+        },
+        {
+          "feature": "Packet Length Std",
+          "value": 1886.332364,
+          "importance": 0.02564603245131313,
+          "impact": -0.02564603245131313
+        },
+        {
+          "feature": "min_seg_size_forward",
+          "value": 32.0,
+          "importance": 0.025397906146419156,
+          "impact": -0.025397906146419156
+        },
+        {
+          "feature": "Bwd Packet Length Std",
+          "value": 2182.468304,
+          "importance": 0.025023977470612507,
+          "impact": -0.025023977470612507
+        },
+        {
+          "feature": "Init_Win_bytes_backward",
+          "value": 235.0,
+          "importance": 0.02286547403796622,
+          "impact": -0.02286547403796622
+        },
+        {
+          "feature": "Bwd Packet Length Min",
+          "value": 0.0,
+          "importance": 0.022747144162805787,
+          "impact": -0.022747144162805787
+        },
+        {
+          "feature": "Subflow Bwd Bytes",
+          "value": 11595.0,
+          "importance": 0.018908407119276514,
+          "impact": -0.018908407119276514
+        },
+        {
+          "feature": "Packet Length Variance",
+          "value": 3558249.789,
+          "importance": 0.018046872521531598,
+          "impact": -0.018046872521531598
+        }
+      ]
+    },
+    "timestamp": "2026-10-16 07:24:36"
+  }
+]
