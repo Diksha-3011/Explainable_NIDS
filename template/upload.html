@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Upload traffic file{% endblock %}
+{% block content %}
+<section class="section-head">
+  <div>
+    <span class="eyebrow">02 / USER INPUT / FILE UPLOAD</span>
+    <h2>Upload network traffic</h2>
+    <p class="muted">Upload a CSV or Excel file with the required saved model feature columns.</p>
+  </div>
+  <a class="button secondary" href="{{ url_for('input_page') }}">← Back to methods</a>
+</section>
+<section class="panel upload-page-panel">
+  <div class="upload-drop-card">
+    <span class="choice-icon green-icon">▤</span>
+    <h3>Select a traffic dataset</h3>
+    <p class="muted">Supported formats: CSV, XLSX and XLS. Each row will be analysed as a separate flow.</p>
+    <label class="file-picker">Choose CSV / Excel<input type="file" id="trafficFile" accept=".csv,.xlsx,.xls"></label>
+    <button class="button primary" id="uploadBtn">Upload &amp; Analyse</button>
+    <div id="uploadMessage" class="message"></div>
+  </div>
+  <div id="uploadResults"></div>
+</section>
+{% endblock %}

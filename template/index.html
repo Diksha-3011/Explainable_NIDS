@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-toolbar"><div class="breadcrumb"><span class="home-icon">⌂</span><span class="muted">› Dashboard</span><span>Real-Time Threat Intelligence Overview</span></div><div class="toolbar-actions"><span class="icon-button" aria-label="Dashboard overview">◈</span><a class="refresh-button" href="/">◉ &nbsp; Refresh Data</a></div></div>
+<div class="dashboard-content">
+<div class="stat-grid dashboard-stats">
+<article class="stat-card"><div class="stat-label">DATASET RECORDS <span>▤</span></div><strong>{{ "{:,.0f}".format(total_rows) }}</strong><small>Combined CICIDS2017 notebook rows</small><div class="stat-foot"><span class="status-chip">Dataset</span><span>8 CSV files</span></div></article>
+<article class="stat-card stat-card-accent"><div class="stat-label">ATTACK CLASSES <span>⌘</span></div><strong>{{ class_counts|length }}</strong><small>Distinct notebook labels</small><div class="stat-foot"><span class="status-chip">Label distribution</span><span>15 classes</span></div></article>
+<article class="stat-card"><div class="stat-label">BENIGN FLOWS <span>◉</span></div><strong>{{ "{:,.0f}".format(benign_rows) }}</strong><small>{{ "{:.2f}".format(benign_rows * 100 / total_rows) }}% of dataset</small><div class="stat-foot"><span class="status-chip">BENIGN</span><span>Notebook count</span></div></article>
+<article class="stat-card"><div class="stat-label">ATTACK FLOWS <span>△</span></div><strong>{{ "{:,.0f}".format(attack_rows) }}</strong><small>{{ "{:.2f}".format(attack_rows * 100 / total_rows) }}% of dataset</small><div class="stat-foot"><span class="status-chip">14 attack labels</span><span>Notebook count</span></div></article>
+</div>
+<div class="notice dashboard-notice" id="modelNotice"><span class="notice-icon">i</span><div><b id="noticeTitle">Checking saved models…</b><p id="noticeText">Loading model status from the local Flask backend.</p></div><a href="/models">Model setup ↗</a></div>
+<div class="chart-grid">
+<section class="panel chart-panel"><div class="panel-head"><div><span class="eyebrow">TRAFFIC MONITORING</span><h3>Records by Attack Class</h3></div><span class="select-pill">CICIDS2017 · log scale</span></div><div class="chart-wrap"><canvas id="trafficTrendChart" aria-label="CICIDS2017 number of records per attack class"></canvas></div></section>
+<section class="panel chart-panel"><div class="panel-head"><div><span class="eyebrow">CLASSIFICATION OVERVIEW</span><h3>Benign vs Attack Records</h3></div><span class="icon-button">⋮</span></div><div class="donut-wrap"><canvas id="severityChart" aria-label="CICIDS2017 benign versus attack record counts"></canvas></div><div class="chart-legend"><span><i class="legend-dot benign"></i>BENIGN: {{ "{:,.0f}".format(benign_rows) }}</span><span><i class="legend-dot threat"></i>Attacks: {{ "{:,.0f}".format(attack_rows) }}</span></div></section>
+</div>
+
+<div class="dashboard-bottom"><section class="panel"><div class="panel-head"><div><span class="eyebrow">MODEL BENCHMARKS</span><h3>Notebook test accuracy</h3></div><a href="/models">View models →</a></div><div id="modelList" class="model-list"><p class="muted">Loading notebook benchmark values…</p></div></section><section class="panel quick-panel"><div class="panel-head"><div><span class="eyebrow">QUICK ACTION</span><h3>Analyse network traffic</h3></div></div><p class="muted">Enter flow features to classify traffic and inspect model explanations.</p><a class="button primary" href="/input">Open detection console <b>↗</b></a></section></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(async function(){
+ const $=id=>document.getElementById(id);
+ const trend=$('trafficTrendChart'), donut=$('severityChart');
+ window.xnidsCharts = window.xnidsCharts || [];
+ const chartTheme = () => {
+  const light = document.documentElement.dataset.theme === 'light';
+  return {
+   grid: light ? 'rgba(73,111,87,.14)' : 'rgba(139,163,154,.12)',
+   text: light ? '#61766a' : '#98aaa4',
+   green: light ? '#2f805d' : '#4ba98b',
+   greenBorder: light ? '#276c4d' : '#3f9778',
+   greenFill: light ? 'rgba(47,128,93,.12)' : 'rgba(53,132,106,.16)',
+   benign: light ? '#2f805d' : '#4ba98b',
+   attacks: light ? '#91b9a0' : '#9a7752',
+   tooltipBg: light ? '#ffffff' : '#101a19',
+   tooltipBorder: light ? '#cbded1' : '#30433d',
+   tooltipTitle: light ? '#20372a' : '#e2e9e5',
+   tooltipBody: light ? '#52675a' : '#b6c6bf'
+  };
+ };
+ const palette = chartTheme();
+ const classLabels={{ class_counts.keys()|list|tojson }};
+ const classCounts={{ class_counts.values()|list|tojson }};
+ const benignCount={{ benign_rows }};
+ const attackCount={{ attack_rows }};
+ if(trend && window.Chart){
+  const trendChart = new Chart(trend,{type:'bar',data:{labels:classLabels,datasets:[{label:'Number of records',data:classCounts,backgroundColor:palette.green,borderColor:palette.greenBorder,borderWidth:1,borderRadius:0,barPercentage:.72,categoryPercentage:.82}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:palette.tooltipBg,borderColor:palette.tooltipBorder,borderWidth:1,titleColor:palette.tooltipTitle,bodyColor:palette.tooltipBody,callbacks:{label:ctx=>' '+Number(ctx.raw).toLocaleString()+' records'}}},scales:{x:{grid:{display:false},ticks:{color:palette.text,maxRotation:90,minRotation:90,font:{size:9}}},y:{type:'logarithmic',grid:{color:palette.grid},ticks:{color:palette.text,callback:v=>Number(v).toLocaleString()}}}}});
+  window.xnidsCharts.push(trendChart);
+ }
+ if(donut && window.Chart){
+  const donutChart = new Chart(donut,{type:'doughnut',data:{labels:['BENIGN','Attack records'],datasets:[{data:[benignCount,attackCount],backgroundColor:[palette.benign,palette.attacks],borderColor:document.documentElement.dataset.theme==='light'?'#ffffff':'#101817',borderWidth:4,hoverOffset:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:true,position:'bottom',labels:{color:palette.text,padding:14}},tooltip:{backgroundColor:palette.tooltipBg,borderColor:palette.tooltipBorder,borderWidth:1,titleColor:palette.tooltipTitle,bodyColor:palette.tooltipBody,callbacks:{label:ctx=>' '+Number(ctx.raw).toLocaleString()+' records'}}}}});
+  window.xnidsCharts.push(donutChart);
+ }
+ window.addEventListener('xnids:themechange', event => {
+  const current = chartTheme();
+  window.xnidsCharts.forEach(chart => {
+   if (chart.config.type === 'bar') {
+    chart.data.datasets[0].backgroundColor = current.green;
+    chart.data.datasets[0].borderColor = current.greenBorder;
+   }
+   if (chart.config.type === 'doughnut') {
+    chart.data.datasets[0].backgroundColor = [current.benign,current.attacks];
+    chart.data.datasets[0].borderColor = event.detail.theme === 'light' ? '#ffffff' : '#101817';
+   }
+   if (chart.options.scales) {
+    Object.values(chart.options.scales).forEach(scale => {
+     if (scale.ticks) scale.ticks.color = current.text;
+     if (scale.grid && scale.grid.display !== false) scale.grid.color = current.grid;
+    });
+   }
+   if (chart.options.plugins.legend && chart.options.plugins.legend.labels) chart.options.plugins.legend.labels.color = current.text;
+   const tooltip = chart.options.plugins.tooltip;
+   if (tooltip) {
+    tooltip.backgroundColor = current.tooltipBg;
+    tooltip.borderColor = current.tooltipBorder;
+    tooltip.titleColor = current.tooltipTitle;
+    tooltip.bodyColor = current.tooltipBody;
+   }
+   chart.update();
+  });
+ });
+})();
+</script>
+{% endblock %}

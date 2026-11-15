@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XNIDS | Network Defence</title>
+<script>
+(() => {
+  try {
+    const saved = localStorage.getItem("xnids-theme");
+    document.documentElement.dataset.theme = saved === "light" ? "light" : "dark";
+  } catch (_) {
+    document.documentElement.dataset.theme = "dark";
+  }
+})();
+</script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=10) }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+<a class="brand" href="/">
+<span class="brand-mark">XN</span>
+<span>XNIDS<small>NETWORK DEFENCE</small>
+</span>
+</a>
+<nav>
+<a class="{{ 'active' if page=='dashboard' else '' }}" href="/">
+<span>◈</span> Dashboard</a>
+<a class="{{ 'active' if page=='input' else '' }}" href="/input">
+<span>⌘</span> User Input</a>
+<a class="{{ 'active' if page=='models' else '' }}" href="/models">
+<span>▥</span> Models & Accuracy</a>
+<a class="{{ 'active' if page=='history' else '' }}" href="/history">
+<span>◷</span> Prediction History</a>
+
+</nav>
+<div class="side-bottom">
+<span class="pulse">
+</span> Local inference console <small>Flask · CICIDS2017</small>
+</div>
+</aside>
+<main class="main">
+<header class="topbar">
+<div>
+<span class="eyebrow">NETWORK DEFENCE / LIVE OVERVIEW</span>
+<h1>{% block title %}Real-Time Threat Intelligence Overview{% endblock %}</h1>
+</div>
+<div class="topbar-controls">
+<button type="button" id="themeToggle" class="theme-toggle" aria-label="Switch to light theme" title="Switch to light theme">
+<span id="themeIcon" aria-hidden="true">☼</span><span id="themeLabel">Light theme</span>
+</button>
+<div class="top-status">
+<span class="pulse"></span>
+<span id="topStatus">Checking models...</span>
+</div>
+</div>
+</header>
+{% block content %}
+
+{% endblock %}
+<footer>XNIDS System · Explainable Network Intrusion Detection <span>Local environment</span>
+</footer>
+</main>
+</div>
+<script src="{{ url_for('static', filename='js/app.js', v=8) }}">
+</script>{% block scripts %}
+{% endblock %}
+</body>
+</html>

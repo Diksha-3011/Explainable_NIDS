@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block title %}Every prediction.<br>
+<em>One timeline.</em>
+{% endblock %}{% block content %}
+
+<section class="section-head">
+<div>
+<span class="eyebrow">04 / ACTIVITY LOG</span>
+<h2>Prediction history</h2>
+<p class="muted">Recent manual predictions saved locally in history.json.</p>
+</div>
+<button class="button secondary" id="refreshHistory">Refresh history</button>
+</section>
+<section class="panel">
+<div id="historyTable" class="table-wrap">Loading history…</div>
+</section>
+
+{% endblock %}

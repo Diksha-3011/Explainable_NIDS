@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Manual feature entry{% endblock %}
+{% block content %}
+<section class="section-head">
+  <div>
+    <span class="eyebrow">02 / USER INPUT / MANUAL</span>
+    <h2>Network flow features</h2>
+    <p class="muted">Enter the values for one network flow. Feature names match the saved notebook feature list.</p>
+  </div>
+  <a class="button secondary" href="{{ url_for('input_page') }}">← Back to methods</a>
+</section>
+<section class="panel feature-panel">
+  <div class="control-row">
+    <label class="field compact"><span>Example values</span><select id="presetSelect"><option value="">Choose sample…</option><option value="benign">Illustrative benign sample</option><option value="attack">Illustrative attack sample</option></select></label>
+    <button class="button secondary" id="applyPreset">Apply sample</button>
+    <button class="button ghost" id="clearBtn">Clear</button>
+    <span class="muted small">Samples are illustrative, not captured traffic.</span>
+  </div>
+  <div id="featureGrid" class="feature-grid" data-built="1">{% for feature in features %}<label class="field"><span>{{ feature }}</span><input type="number" step="any" name="{{ feature }}" data-feature="{{ feature }}" placeholder="Enter {{ feature|lower }}" value="0"></label>{% endfor %}</div>
+  <div class="form-actions"><span class="muted small">Enter numeric values for the flow features.</span><button class="button primary" id="analyseBtn">Analyse traffic <b>↗</b></button></div>
+  <div id="predictionResult" class="result-wrap hidden"></div>
+</section>
+{% endblock %}

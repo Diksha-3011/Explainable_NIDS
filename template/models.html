@@ -1,0 +1,39 @@
+{% extends "base.html" %}{% block title %}Know your models.<br>
+<em>Measure performance.</em>
+{% endblock %}{% block content %}
+
+<section class="section-head">
+<div>
+<span class="eyebrow">03 / MODEL BENCHMARKS</span>
+<h2>Models & accuracy</h2>
+<p class="muted">Dataset test accuracy is shown separately from confidence on a single prediction.</p>
+</div>
+</section>
+<div class="notice">
+<span class="notice-icon">i</span>
+<div>
+<b>Accuracy vs confidence</b>
+<p>Accuracy is measured across labelled test data. A single user-entered flow has a prediction and confidence score—not an individual accuracy score.</p>
+</div>
+</div>
+<section class="panel">
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Notebook test accuracy</th>
+<th>Dataset</th>
+</tr>
+</thead>
+<tbody id="modelTable">{% for model in model_rows %}<tr>
+<td>{{ model.name }}</td>
+<td>{{ '%.4f%%'|format(model.test_accuracy * 100) if model.test_accuracy is not none else 'Not reported in notebook' }}</td>
+<td>{{ model.dataset }}</td>
+</tr>{% endfor %}</tbody>
+</table>
+</div>
+<div class="panel-note">Notebook test accuracy: Random Forest 99.8281%, Decision Tree 99.8264%, and XGBoost 99.6549%. These are test-set benchmark values from the supplied notebook, not live prediction confidence.</div>
+</section>
+
+{% endblock %}

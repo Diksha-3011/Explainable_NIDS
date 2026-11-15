@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Choose analysis method{% endblock %}
+{% block content %}
+<section class="section-head">
+  <div>
+    <span class="eyebrow">02 / USER INPUT</span>
+    <h2>Choose an analysis method</h2>
+    <p class="muted">Select how you want to analyse CICIDS-style network traffic.</p>
+  </div>
+</section>
+<div class="choice-grid">
+  <a class="choice-card" href="{{ url_for('manual_input_page') }}">
+    <span class="choice-icon">⌘</span>
+    <h3>Manual feature entry</h3>
+    <p>Enter the network flow feature values yourself using the saved model feature list.</p>
+    <span class="choice-link">Enter features <span aria-hidden="true">→</span></span>
+  </a>
+  <a class="choice-card" href="{{ url_for('upload_input_page') }}">
+    <span class="choice-icon green-icon">▤</span>
+    <h3>Upload traffic file</h3>
+    <p>Upload a CSV or Excel file containing the required feature columns for batch predictions.</p>
+    <span class="choice-link">Choose a file <span aria-hidden="true">→</span></span>
+  </a>
+</div>
+{% endblock %}
